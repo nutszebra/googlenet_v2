@@ -193,7 +193,7 @@ class OptimizerNetworkInNetwork(Optimizer):
 class OptimizerGooglenetV2(Optimizer):
 
     def __init__(self, model=None, lr=0.045, momentum=0.9, weight_decay=4.0e-5):
-        super(OptimizerGooglenet, self).__init__(model)
+        super(OptimizerGooglenetV2, self).__init__(model)
         optimizer = optimizers.MomentumSGD(lr, momentum)
         weight_decay = chainer.optimizer.WeightDecay(weight_decay)
         optimizer.setup(self.model)
