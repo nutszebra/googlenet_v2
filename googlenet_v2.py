@@ -6,6 +6,25 @@ from collections import defaultdict
 import nutszebra_chainer
 
 
+class BN_ReLU_Conv(nutszebra_chainer.Model):
+
+    def __init__(self, in_channel, out_channel, filter_size=(3, 3), stride=(1, 1), pad=(1, 1)):
+        super(BN_ReLU_Conv, self).__init__(
+            conv=L.Convolution2D(in_channel, out_channel, filter_size, stride, pad),
+            bn=L.BatchNormalization(in_channel),
+        )
+
+    def weight_initialization(self):
+        self.conv.W.data = self.weight_relu_initialization(self.conv)
+        self.conv.b.data = self.bias_initialization(self.conv, constant=0)
+
+    def __call__(self, x, train=False):
+        return self.conv(F.relu(self.bn(x, test=not train)))
+
+    def count_parameters(self):
+        return functools.reduce(lambda a, b: a * b, self.conv.W.data.shape)
+
+
 class Conv_BN_ReLU(nutszebra_chainer.Model):
 
     def __init__(self, in_channel, out_channel, filter_size=(3, 3), stride=(1, 1), pad=(1, 1)):
@@ -81,9 +100,9 @@ class Googlenet(nutszebra_chainer.Model):
     def __init__(self, category_num):
         super(Googlenet, self).__init__()
         modules = []
-        modules += [('conv1', Conv_BN_ReLU(3, 64, (7, 7), (2, 2), (3, 3)))]
-        modules += [('conv2_1x1', Conv_BN_ReLU(64, 64, (1, 1), (1, 1), (0, 0)))]
-        modules += [('conv2_3x3', Conv_BN_ReLU(64, 192, (3, 3), (1, 1), (1, 1)))]
+        modules += [('conv1', BN_ReLU_Conv(3, 64, (7, 7), (2, 2), (3, 3)))]
+        modules += [('conv2_1x1', BN_ReLU_Conv(64, 64, (1, 1), (1, 1), (0, 0)))]
+        modules += [('conv2_3x3', BN_ReLU_Conv(64, 192, (3, 3), (1, 1), (1, 1)))]
         # modules += [('inception3a', Inception(192, 64, 64, 64, 64, 96, 32, pass_through=False, proj='ave', stride=1))]
         # modules += [('inception3b', Inception(256, 64, 64, 96, 64, 96, 64, pass_through=False, proj='ave', stride=1))]
         # modules += [('inception3c', Inception(320, 0, 128, 160, 64, 96, 0, pass_through=True, proj='max', stride=2))]
