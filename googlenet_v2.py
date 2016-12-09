@@ -30,14 +30,13 @@ class Inception(nutszebra_chainer.Model):
     def __init__(self, in_channel, conv1x1=64, reduce3x3=96, conv3x3=128, reduce5x5=16, conv5x5=32, pool_proj=32, pass_through=False, proj='max', stride=1):
         super(Inception, self).__init__()
         modules = []
-        if pass_through is False:
-            modules.append(('conv1x1', Conv_BN_ReLU(in_channel, conv1x1, 1, stride, 0)))
         modules.append(('reduce3x3', Conv_BN_ReLU(in_channel, reduce3x3, 1, 1, 0)))
         modules.append(('conv3x3', Conv_BN_ReLU(reduce3x3, conv3x3, 3, stride, 1)))
         modules.append(('reduce5x5', Conv_BN_ReLU(in_channel, reduce5x5, 1, 1, 0)))
         modules.append(('conv5x5_1', Conv_BN_ReLU(reduce5x5, conv5x5, 3, 1, 1)))
         modules.append(('conv5x5_2', Conv_BN_ReLU(conv5x5, conv5x5, 3, stride, 1)))
         if pass_through is False:
+            modules.append(('conv1x1', Conv_BN_ReLU(in_channel, conv1x1, 1, stride, 0)))
             modules.append(('pool_proj', Conv_BN_ReLU(in_channel, pool_proj, 1, 1, 0)))
         # register layers
         [self.add_link(*link) for link in modules]
@@ -96,6 +95,7 @@ class Googlenet(nutszebra_chainer.Model):
         modules += [('inception5a', Inception(1056, 352, 192, 320, 160, 224, 128, pass_through=False, proj='ave', stride=1))]
         modules += [('inception5b', Inception(1024, 352, 192, 320, 192, 224, 128, pass_through=False, proj='max', stride=1))]
         modules += [('linear', L.Linear(1024, category_num))]
+        modules += [('linear_check', L.Linear(192, category_num))]
         # register layers
         [self.add_link(*link) for link in modules]
         self.modules = modules
@@ -124,20 +124,21 @@ class Googlenet(nutszebra_chainer.Model):
         h = self.conv2_1x1(h, train)
         h = self.conv2_3x3(h, train)
         h = F.max_pooling_2d(h, ksize=(3, 3), stride=(2, 2), pad=(1, 1))
-        h = self.inception3a(h, train)
-        h = self.inception3b(h, train)
-        h = self.inception3c(h, train)
-        h = self.inception4a(h, train)
-        h = self.inception4b(h, train)
-        h = self.inception4c(h, train)
-        h = self.inception4d(h, train)
-        h = self.inception4e(h, train)
-        h = self.inception5a(h, train)
-        h = self.inception5b(h, train)
+        # h = self.inception3a(h, train)
+        # h = self.inception3b(h, train)
+        # h = self.inception3c(h, train)
+        # h = self.inception4a(h, train)
+        # h = self.inception4b(h, train)
+        # h = self.inception4c(h, train)
+        # h = self.inception4d(h, train)
+        # h = self.inception4e(h, train)
+        # h = self.inception5a(h, train)
+        # h = self.inception5b(h, train)
         num, categories, y, x = h.data.shape
         # global average pooling
         h = F.reshape(F.average_pooling_2d(h, (y, x)), (num, categories))
-        h = F.relu(self.linear(h))
+        # h = F.relu(self.linear(h))
+        h = F.relu(self.linear_check(h))
         return h
 
     def calc_loss(self, y, t):
