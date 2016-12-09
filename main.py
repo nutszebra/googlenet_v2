@@ -49,7 +49,7 @@ if __name__ == '__main__':
     print('generating model')
     model = googlenet_v2.Googlenet(10)
     print('Done')
-    optimizer = nutszebra_optimizer.OptimizerGooglenetV2(model, lr=lr)
+    optimizer = nutszebra_optimizer.OptimizerGooglenet(model, lr=lr)
     args['model'] = model
     args['optimizer'] = optimizer
     args['da'] = nutszebra_data_augmentation.DataAugmentationCifar10NormalizeBigger
