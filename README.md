@@ -36,7 +36,7 @@ Normal convolution is used.
 
 | network              | depth  | total accuracy (%) |
 |:---------------------|--------|-------------------:|
-| my implementation    | 32     | soon               |
+| my implementation    | 32     | 94.89              |
 
 <img src="https://github.com/nutszebra/googlenet_v2/blob/master/loss.jpg" alt="loss" title="loss">
 <img src="https://github.com/nutszebra/googlenet_v2/blob/master/accuracy.jpg" alt="total accuracy" title="total accuracy">
