@@ -41,10 +41,11 @@ Normal convolution is used.
 <img src="https://github.com/nutszebra/googlenet_v2/blob/master/loss.jpg" alt="loss" title="loss">
 <img src="https://github.com/nutszebra/googlenet_v2/blob/master/accuracy.jpg" alt="total accuracy" title="total accuracy">
 
-# References
+# References  
 Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift [[1]][Paper]  
 Going Deeper with Convolutions [[2]][Paper2]  
 Rethinking the Inception Architecture for Computer Vision [[3]][Paper3]  
-[paper]: https://arxiv.org/abs/1502.03167 "Paper"
-[paper2]: https://arxiv.org/abs/1409.4842 "Paper2"
-[paper3]: https://arxiv.org/abs/1512.00567 "Paper3"
+
+[paper]: https://arxiv.org/abs/1502.03167 "Paper"  
+[paper2]: https://arxiv.org/abs/1409.4842 "Paper2"  
+[paper3]: https://arxiv.org/abs/1512.00567 "Paper3"  
